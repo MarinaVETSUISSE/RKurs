@@ -28,7 +28,7 @@ usethis:: use_git_config(user.name = "MarinaVETSUISSE", user.email = "marina.hil
 # usethis:: create_github_token()
 # done 16.04.2024 (referal to confirmation email)
 # gitcreds::gitcreds_set()
-Sys.setenv(GIT_PAT = "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")
+
 
 # In the Console R can be used as a calculator, brief calculations before adding
 # a new snipplet to the actual code
