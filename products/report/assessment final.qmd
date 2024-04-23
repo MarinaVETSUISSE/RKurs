@@ -1,0 +1,74 @@
+---
+title: "Assessment of the correlation between BMI and the process of Intubation in female patients"
+author: "Marina N.E. Hillen"
+date: "`r date()`"
+format:
+  html:
+    toc: true
+    code-fold: show
+    code-tools: true
+  pdf:
+    toc: true
+  docx:
+    toc: true
+editor: visual
+---
+
+```{r}
+#| output: false #zeigt Consolen-Output 
+#| echo: false  #Code will not be echoed (not shown)
+#| warning: false
+
+# to add code snipplets: press the green Cplus button top right
+# the code snipplets need to start and end with 3 back-ticks and link to R by indicating ```{r}```
+
+# load libraries
+library(here)
+library(tidyverse)
+library(lubridate)
+library(ggplot2)
+library(unibeCols)
+```
+
+## Introduction
+The aim of short analysis is to visualize the correlation between BMI and the process of Intubation in female patients over 30 years of age. 
+
+## Data
+We read and process the data as reported by [ Amy S. Nowacki, ’Laryngoscope Dataset’, TSHS Resources Portal (2017)](https://www.causeweb.org/tshs/laryngoscope/).
+
+
+```{r}
+#| output: false
+#| echo: false
+#| warning: false
+
+# load data
+library(medicaldata)
+data(laryngoscope)
+
+# Process data
+laryngoscope <- laryngoscope |>
+  filter(gender == 0) |>
+  filter(age > 30)
+```
+
+```{r}
+#| echo: false
+#| warning: false
+#| label: fig-laryngoscope
+#| fig-cap: "correlation between BMI and total Intubation time"
+#| fig-width: 4
+#| fig-height: 4
+
+ggplot(laryngoscope, aes(x = BMI, y = total_intubation_time)) +
+  geom_point(alpha = 0.5, size = 3) +  # Add scatter points
+  geom_smooth(method = "lm", se = FALSE) +  # Add linear regression line
+  labs(x = "BMI", y = "Total Intubation Time") +
+  theme_minimal() +
+  theme(axis.title = element_text(size = 14),  # Increase axis title size
+        axis.text = element_text(size = 12))  # Increase axis text size
+
+```
+## Conclusions
+
+@fig-laryngoscope does not show the clear correlation between BMI and time until successfull intubation, that was expected from the authors experience in the veterinary field.
