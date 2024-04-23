@@ -11,6 +11,7 @@ format:
     toc: true
   docx:
     toc: true
+embed-resources: true
 editor: visual
 ---
 
@@ -20,7 +21,7 @@ editor: visual
 #| warning: false
 
 # to add code snipplets: press the green Cplus button top right
-# the code snipplets need to start and end with 3 back-ticks and link to R by indicating ```{r}```
+# the code snipplets need to start and end with 3 back-ticks, link to R by indicating{r}```
 
 # load libraries
 library(here)
