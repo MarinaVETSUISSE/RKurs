@@ -1,0 +1,79 @@
+---
+title: "report on the second wave of COVID-19 in Switzerland"
+author: "Marina N. E. Hillen"
+date: "`r date()`"
+format:
+  html:
+    toc: true
+    code-fold: show
+    code-tools: true
+  pdf:
+    toc: true
+  docx:
+    toc: true
+editor: visual
+---
+
+```{r}
+#| output: false #zeigt Consolen-Output 
+#| echo: false  #Code will not be echoed (not shown)
+#| warning: false
+
+# to add code snipplets: press the green Cplus button top right
+# the code snipplets need to start and end with 3 back-ticks and link to R by indicating ```{r}```
+
+# load libraries
+library(here)
+library(tidyverse)
+library(lubridate)
+library(ggplot2)
+library(unibeCols)
+```
+
+## Introduction
+
+The aim of this excercise is to visualize the increase in laboratory-confirmed cases of COVID-19 in Switzerland during autumn 2020.
+
+## Data
+
+We read and process the data as reported by the [Federal Office of Public Health](https://idd.bag.admin.ch/).
+
+```{r}
+#| output: false
+#| echo: false
+#| warning: false
+cases <- read_csv(here("data/raw/COVID19Cases_geoRegion.csv"))
+```
+
+```{r}
+#| output: false
+#| echo: false
+#| warning: false
+# Process data
+region <- "CH"
+window_start <- ymd("2020-09-01")
+window_end <- ymd("2020-11-30")
+cases <- cases |>
+  filter(geoRegion == region & datum >= window_start & datum <= window_end) |>
+  select(datum, entries)
+cases
+```
+
+The figure shows the number of laboratory-confirmed cases of COVID in Switzerland from `r window_start` to `r window_end`.
+
+```{r}
+#| echo: false
+#| label: fig-cases
+#| fig-cap: "laboratory-confirmed cases of COVID in Switzerland in 2020"
+#| fig-width: 8
+#| fig-height: 4
+
+ggplot(cases, aes(x = datum, y=entries)) +
+  geom_bar(stat = "identity", fill = unibeSaphire())+
+  labs(x = "", y = "laboratory-confirmed cases of COVID")+
+  theme_minimal()
+```
+
+## Conclusions
+
+@fig-cases shows: The number of laboratory-confirmed cases of COVID in Switzerland increased.
