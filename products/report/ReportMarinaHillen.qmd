@@ -1,0 +1,108 @@
+---
+title: "Assessment of cow happiness in relation to season and breed"
+author: "Marina N. E. Hillen"
+date: " `r date()`"
+format:
+  html:
+    toc: true
+    code-fold: show
+    code-tools: true
+  pdf:
+    toc: true
+  docx:
+    toc: true
+embed-resources: true
+editor: visual
+---
+
+```{r}
+#| output: false #zeigt Consolen-Output 
+#| echo: false  #Code will not be echoed (not shown)
+#| warning: false
+
+# to add code snipplets: press the green Cplus button top right
+# the code snipplets need to start and end with 3 back-ticks and link to R by indicating ```{r}```
+
+# load libraries
+library(here)
+library(tidyverse)
+library(lubridate)
+library(ggplot2)
+library(unibeCols)
+library(data.table)
+```
+
+## Introduction
+
+The aim of this report is to visualize the level of happiness in Braunvieh and Holstein cows in relation to season. The data was completely made up by the author [Marina Hillen](https://www.gesundeklauen.unibe.ch/qui_sommes_nous/personen/med_vet_hillen_marina/index_fra.html/).
+
+```{r}
+#| output: false
+#| echo: false
+#| warning: false
+
+setwd("C:/Users/marin/Desktop/RKurs/data/raw/")
+happycows <- fread("happycows.csv")
+```
+
+## Plotting: Visualizing the Happiness Score of the two breedgroups
+
+```{r}
+#| echo: false
+#| label: fig-happycows
+#| fig-cap: "Happiness Score of the two breedgroups"
+#| fig-width: 8
+#| fig-height: 4
+
+ggplot(data=filter(happycows, Breed == ''), aes(x=season, y=happiness))+
+  ggdist::stat_halfeye(
+    data=filter(happycows, Breed == '1'),
+    aes(x=Season, y=Happiness, group=Breed, fill='Braunviehkühe'),
+    width=.5, side="topright", 
+    justification=-.01, colour_ramp=NA, alpha=.8, trim=FALSE
+  ) +
+  ggdist::stat_halfeye(
+    data=filter(happycows, Breed == '0'),
+    aes(x=Season, y=Happiness, group=Breed, fill='Holsteinkühe'),
+    width=.5, side="topleft", 
+    justification=1.01, colour_ramp=NA, alpha=.8, trim=FALSE
+  ) +
+  # Erstelle Boxplots für alle vier halben Geigen
+  geom_boxplot(
+    data=filter(happycows, Season == 'Winter', Breed == 0),
+    aes(x=Season, y=Happiness),
+    width=.15, outlier.color = NA, position= position_nudge(x=-0.1)
+  ) +
+  geom_boxplot(
+    data=filter(happycows, Season == 'Winter', Breed == 1),
+    aes(x=Season, y=Happiness),
+    width=.15, outlier.color = NA, position= position_nudge(x=0.1)
+  ) +
+  geom_boxplot(
+    data=filter(happycows, Season == 'Summer', Breed == 0),
+    aes(x=Season, y=Happiness),
+    width=.15, outlier.color = NA, position= position_nudge(x=-0.1)
+  ) +
+  geom_boxplot(
+    data=filter(happycows, Season == 'Summer', Breed == 1),
+    aes(x=Season, y=Happiness),
+    width=.15, outlier.color = NA, position= position_nudge(x=0.1)
+  ) +
+  scale_fill_manual(
+    values = c('Braunviehkühe' = '#B0C4DE', 'Holsteinkühe' = '#CD5C5C')
+  ) +
+  
+  labs(
+    y = 'Happiness',
+    x='Season',
+    fill = '',
+    title = 'Happiness',
+    subtitle = ''
+  ) +
+  
+  theme_bw(base_size = 8) %+replace% theme( legend.position="bottom")
+```
+
+## Conclusions
+
+@fig-happycows shows: Braunvieh cows were happier than Holstein cows during summer, likely due to the fact that they have access to pasture more often than Holstein cows. During the winter Holstein cows were happier than Braunvieh cows, which can be explained by their preference for cold weather.
